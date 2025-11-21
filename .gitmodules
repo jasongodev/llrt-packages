@@ -1,3 +1,6 @@
 [submodule "aur/llrt-git"]
 	path = aur/llrt-git
 	url = https://github.com/jasongodev/aur-llrt-git.git
+[submodule "aur/llrt"]
+	path = aur/llrt
+	url = https://github.com/jasongodev/aur-llrt.git
