@@ -1,11 +1,9 @@
 #!/bin/bash
 set -e
 
-echo "Updating AUR packages"
-
-for dir in ./*/ ; do
-  (
-    if [ -d "$dir" ]; then
+update_package() {
+  set -e
+    local dir="$1"
       pkgdir=$(realpath "$dir")
       pkgname=$(basename "$pkgdir")
       echo -e "\n\e[1;34m==>\e[0m Updating aur/$pkgname"
@@ -28,15 +26,19 @@ for dir in ./*/ ; do
       git add . > /dev/null 2>&1 || true
       git commit -m "Version bump" > /dev/null 2>&1 || true
 
-      #echo -e "\e[1;32m===>\e[0m GitHub"
       git remote remove origin || true
       git remote add origin "https://github.com/jasongodev/aur-$pkgname.git"
-      OUT=$(git push -u origin master 2>&1) && echo "✅ Package pushed to GitHub" || (echo "❌ Error pushing to GitHub: $OUT")
-
-      #echo -e "\e[1;32m===>\e[0m AUR"
+      
       git remote remove aur || true
       git remote add aur "ssh://aur@aur.archlinux.org/$pkgname.git"
+
+      OUT=$(git push -u origin master 2>&1) && echo "✅ Package pushed to GitHub" || (echo "❌ Error pushing to GitHub: $OUT")
       OUT=$(git push -u aur master 2>&1) && echo "✅ Package pushed to AUR" || (echo "❌ Error pushing to AUR: $OUT")
-    fi
-  )
+}
+
+echo "Updating AUR packages"
+export -f update_package
+for dir in ./*/ ; do
+  sem -j +0 "update_package $dir"
 done
+sem --wait
