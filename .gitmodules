@@ -4,3 +4,6 @@
 [submodule "aur/llrt"]
 	path = aur/llrt
 	url = https://github.com/jasongodev/aur-llrt.git
+[submodule "aur/llrt-bin"]
+	path = aur/llrt-bin
+	url = https://github.com/jasongodev/aur-llrt-bin.git
